@@ -1,0 +1,25 @@
+.w-20 {
+    width: 20% !important;
+}
+
+.box {
+    width: 100px;
+    height: 114px !important;
+}
+
+.box-element{
+        height: 114px !important;
+}
+
+.bg-light-op{
+    background-color: rgb(242 248 255 / 45%) !important;
+}
+
+.pr-3{
+    padding-right: 2rem;
+}
+
+
+.pt-3{
+    padding-right: 2rem;
+}

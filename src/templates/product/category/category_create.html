@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block main %}
+    <div class="container w-75">
+        <h2 class="bg-lightblue  m-auto w-75 p-4 text-center">دسته بندی</h2>
+        <div class="bg-lightblue-op m-auto p-4 w-75">
+            <div class="container w-75">
+                <form method="post" class="text-center">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <div class="row">
+                        <button class="col btn btn-success ml-2" type="submit">ذخیره</button>
+                        <a class="col btn btn-primary text-white" href="{% url 'home' %}">
+                            بازگشت
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock main %}

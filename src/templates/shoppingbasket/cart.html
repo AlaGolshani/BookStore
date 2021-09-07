@@ -1,0 +1,255 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block style %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"
+            integrity="sha512-Zq9o+E00xhhR/7vJ49mxFNJ0KQw1E1TMWkPTxrWcnpfEFDEXgUiwJHIKit93EW/XxE31HSI5GEOW06G6BF1AtA=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+{% endblock %}
+
+{% block title %}
+    سبد خرید
+{% endblock %}
+
+{% block main %}
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="box-element m-auto w-75 mb-4">
+                <div class="bg-lightblue p-3">
+                    <div class="row m-1 cart-head">
+                        <div class="col-2"></div>
+                        <div class="col-2"><strong>محصول</strong></div>
+                        <div class="col-2"><strong>قیمت</strong></div>
+                        <div class="col-2"><strong>تعداد</strong></div>
+                        <div class="col-2"><strong>قیمت کل</strong></div>
+                        <div class="col-1"></div>
+                        <div class="col-1"></div>
+                    </div>
+                </div>
+                {% if order %}
+                    {% for item in order.order_items.all %}
+                        <div id="order-item" class="row align-items-baseline m-2 mb-4 bg-light rounded">
+                            <div class="col-2">
+                                <img class="row-image" src="{{ item.book.imageURL }}">
+                                <a href={% url 'book-detail' item.book.slug %}>
+                                    <div class="mask rgba-white-slight waves-effect waves-light"></div>
+                                </a>
+                            </div>
+                            <div class="col-2 text-center">
+                                <a class="text-primary" href={% url 'book-detail' item.book.slug %}>
+                                    {{ item.book.title }}
+                                </a>
+                            </div>
+                            <div class="col-2"><p class="text-center">{{ item.book.price }} تومان</p></div>
+
+                            <div class="col-2 number">
+                                <div class="qty mt-5">
+                                    {% if order.status == 'P' %}
+                                        <span class="plus bg-lightblue">+</span>
+                                    {% endif %}
+                                    <input class="count" name="qty"
+                                           value="{{ item.item_count }}"
+                                           data-url="{% url 'counter-input' item.pk %}" readonly>
+                                    {% if order.status == 'P' %}
+                                        <span class="minus bg-lightblue">-</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <div id="item_price" class="col-2 text-center"><p>{{ item.get_price }} تومان</p></div>
+
+                            <div class="col-2  text-center">
+                                {% if order.status == 'P' %}
+                                    <btn class="btn delete_item" data-url="{% url 'delete-item' item.pk %}">
+                                        <i class="fa fa-remove text-danger fa-lg"></i>
+                                    </btn>
+                                {% endif %}
+
+                            </div>
+                        </div>
+                    {% empty %}
+                        <p class="text-center p-3">هنوز کتابی انتخاب نشده است.</p>
+                    {% endfor %}
+                    </div>
+
+                    {% if order.order_items.all %}
+                        <table class="table box-element w-75 m-auto mb-4 bg-white">
+                            <thead class="thead-dark">
+                            <tr>
+                                <th scope="col">تعداد</th>
+                                <th scope="col">قیمیت کالا ها</th>
+                                <th scope="col">تخفیف کل</th>
+                                <th scope="col">قیمت کل سفارش</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <th id="items_count" scope="row">{{ order.get_items_count }}</th>
+                                <td id="order_original_price">{{ order.get_original_price }} تومان</td>
+                                <td id="total_discount">{{ order.get_total_discount }} تومان</td>
+                                <td id="order_price">{{ order.get_price }} تومان</td>
+                            </tr>
+                            <tr>
+                            </tbody>
+                        </table>
+
+                        {% if order.status == 'P' %}
+                            <div class="row box-element text-center w-75 m-auto align-items-baseline mb-4">
+                            <div class="col-2">
+                                <label for="discount">کد تخفیف داری؟ </label>
+                            </div>
+
+                            <div class="col-3">
+                                <input id="discount_input" type="text" class="form-control" style="direction: ltr">
+                            </div>
+                            <div class="col-1">
+                                <button id="apply_dis" type="submit" class="btn btn-success rounded">بررسی</button>
+                            </div>
+
+                            <div class="col-4"></div>
+
+                            <div class="col-2">
+                                <a class="btn btn-primary rounded text-white" href="{% url 'checkout' order.pk %}">ثبت
+                                    سفارش</a>
+                            </div>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                    </div>
+                    </div>
+                {% else %}
+                    <p class="text-center p-3">هنوز کتابی انتخاب نشده است.</p>
+                {% endif %}
+{% endblock main %}
+
+{% block script %}
+    <script>
+        $(document).ready(function () {
+
+            const csrftoken = getCookie('csrftoken');
+                console.log('hello0')
+
+            $('.minus').on('click', function () {
+                const input = $(this).parent().find('input');
+                const item_price = $(this).parent().parent().parent().find('#item_price');
+                const count = parseInt(input.val());
+                let new_count = count - 1;
+                new_count = new_count < 1 ? 1 : new_count;
+                input.val(new_count);
+                const ajax_url = input.attr('data-url')
+                if (new_count < count) {
+                    $.ajax(
+                        {
+                            type: "POST",
+                            url: ajax_url,
+                            data: {
+                                'counter': '-',
+                            },
+                            headers: {'X-CSRFToken': csrftoken},
+                            success: function (data) {
+                                item_price.text(data.item_price + ' تومان')
+                                $('#order_original_price').text(data.order_original_price + ' تومان')
+                                $('#order_price').text(data.order_price + ' تومان')
+                                $('#total_discount').text(data.total_discount + ' تومان')
+                                $('#items_count').text(data.items_count)
+                            }
+                        }
+                    )
+                }
+            });
+
+            $('.plus').on('click', function () {
+                const input = $(this).parent().find('input');
+                const ajax_url = input.attr('data-url')
+                const item_price = $(this).parent().parent().parent().find('#item_price');
+                $.ajax(
+                    {
+                        type: "POST",
+                        url: ajax_url,
+                        data: {
+                            'counter': '+',
+                        },
+                        headers: {'X-CSRFToken': csrftoken},
+                        success: function (data) {
+                            if (data.valid === true) {
+                                input.val(parseInt(input.val()) + 1);
+                                item_price.text(data.item_price + ' تومان')
+                                $('#order_original_price').text(data.order_original_price + ' تومان')
+                                $('#order_price').text(data.order_price + ' تومان')
+                                $('#total_discount').text(data.total_discount + ' تومان')
+                                $('#items_count').text(data.items_count)
+                            } else {
+                                iziToast.show({
+                                    title: '',
+                                    color: 'red',
+                                    message: data.message
+                                });
+                            }
+                        }
+                    }
+                )
+            });
+
+            $('.delete_item').on('click', (function (event) {
+                const this_div = $(this).parent().parent();
+                const ajax_url = $(this).attr('data-url')
+                const sure = confirm('آیا از حذف این کتاب اطمینان دارید؟');
+                if (sure === true) {
+                    $.ajax(
+                        {
+                            type: "POST",
+                            url: ajax_url,
+                            headers: {'X-CSRFToken': csrftoken},
+                            success: function (data) {
+                                this_div.remove()
+                                $('#order_original_price').text(data.order_original_price + ' تومان')
+                                $('#order_price').text(data.order_price + ' تومان')
+                                $('#total_discount').text(data.total_discount + ' تومان')
+                                $('#items_count').text(data.items_count)
+                                iziToast.show({
+                                    title: '',
+                                    color: 'blue',
+                                    message: 'کتاب مورد نظر حذف شد.'
+                                });
+
+                            }
+                        }
+                    )
+                }
+            }))
+
+            $('#apply_dis').click(function () {
+                console.log('hello1')
+                discount_code = $('#discount_input').val()
+                console.log('hello2')
+
+                $.post({% url 'cart' %},
+                    {
+                        csrfmiddlewaretoken: '{{ csrf_token }}',
+                        'discount': discount_code
+                    }, function (data) {
+                        console.log('hello3')
+
+                        if (data.valid === true) {
+                            $('#order_price').text(data.total_price + ' تومان')
+                            $('#total_discount').text(data.total_discount + ' تومان')
+                            $('#discount_input').val('');
+                            iziToast.show({
+                                title: '',
+                                color: 'green',
+                                message: data.message
+                            });
+                        } else {
+                            $('#discount_input').val('')
+                            iziToast.show({
+                                title: '',
+                                color: 'red',
+                                message: data.message
+                            });
+                        }
+                    }
+                )
+            })
+        })
+    </script>
+{% endblock %}

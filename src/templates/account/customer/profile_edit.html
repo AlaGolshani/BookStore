@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% block title %}ویرایش پروفایل{% endblock title %}
+{% block main %}
+    <div class="container w-75">
+        <h2 class="bg-lightblue  m-auto w-75 p-4 text-center">پروفایل</h2>
+        <div class="bg-lightblue-op m-auto p-4 w-75">
+            <div class="container w-75">
+                <form method="post">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+
+                    <div class="container">
+                        <h5 class="mt-5">آدرس ها:
+                            <span>
+                                <a class="delete_item" href="{% url 'accounts:create_address' %}">
+                                    <i class="fas fa-plus text-danger"></i>
+                                </a>
+                            </span>
+                        </h5>
+                        <ul>
+                            {% for address in addresses.all %}
+                                <li class="row align-items-baseline">
+                                <p class="col-7">
+                                    {{ address }}
+                                </p>
+                                <a class="col-1 delete_item" href="{% url 'accounts:edit_address' address.pk %}">
+                                    <i class="col-1 fas fa-edit text-success"></i>
+                                </a>
+                                {% if address.default == False %}
+                                    <a class="col-3 delete_item" href="{% url 'accounts:delete_address' address.pk %}">
+                                        <i class="fa fa-remove text-danger fa-lg" aria-hidden="true"></i>
+                                    </a>
+                                {% else %}
+                                    <p class="col-4">پیش فرض</p>
+                                {% endif %}
+                                <hr>
+                            {% empty %}
+                                <a href="{% url 'accounts:create_address' %}">آدرسی وجود ندارد.</a>
+                            {% endfor %}
+                            </li>
+                        </ul>
+                    </div>
+
+                        <a class="btn border-info mb-3" href="{% url 'account_reset_password_from_key' uidb36 key%}">
+                            تغییر رمز عبور
+                        </a>
+
+                        <div class="row justify-content-space-between" style="justify-content: space-between;">
+                        <button class="col-3 btn btn-success" type="submit">ذخیره</button>
+                        <a class="col-3 btn btn-primary text-white" href="{% url 'accounts:edit' user.pk %}">
+                            بازگشت
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock main %}

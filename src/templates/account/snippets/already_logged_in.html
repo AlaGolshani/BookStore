@@ -1,0 +1,7 @@
+{% load i18n %}
+{% load account %}
+
+{% user_display user as user_display %}
+<p><strong>{% trans "Note" %}:</strong> {% blocktrans %}
+شما قبلاً به عنوان {{ user_display }} وارد شده اید
+    .{% endblocktrans %}</p>

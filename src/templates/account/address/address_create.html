@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block main %}
+    <div class="container w-75 mb-4">
+        <h2 class="bg-lightblue m-auto w-75 p-4 text-center text-default">آدرس جدید</h2>
+        <div class="bg-light-op m-auto p-4 w-75">
+            <div class="container w-75">
+                <form method="post">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <div class="row justify-content-space-between" style="justify-content: space-between;">
+                        <button class="col-3 btn btn-success" type="submit">ذخیره</button>
+                        <a class="col-3 btn btn-primary text-white" href="{% url 'accounts:edit' user.pk %}">
+                            بازگشت
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock main %}

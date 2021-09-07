@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% block main %}
+    <div class="container w-75">
+        <h4 class="m-auto p-4 bg-light rounded-top">
+            آدرس ارسال سفارش را مشخص کنید:</h4>
+        <form action="{% url 'checkout' order_pk %}" method="post" class="bg-light-op pt-4 ps-4 rounded-bottom ">
+            {% csrf_token %}
+
+            {% if addresses %}
+                <select class="form-select col-2" aria-label="Default select example" name="address_pk">
+
+                    {% for address in addresses.all %}
+                        {% if address.default == True %}
+                            <option value="{{ address.pk }}" selected>{{ address }}</option>
+                        {% endif %}
+                    {% endfor %}
+
+                    {% for address in addresses.all %}
+                        {% if address.default == False %}
+                            <option value="{{ address.pk }}">{{ address }}</option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+
+                <div class="row p-4 justify-content-between">
+                    <a class="delete_item col-3" href="{% url 'accounts:create_address' %}">
+                        <i class="fas fa-plus text-danger"></i>
+                        افزودن آدرس
+                    </a>
+                    <div class="col-2 rounded-bottom">
+
+                        <button class="btn btn-success ml-2 m-auto ps-4" type="submit">ثبت</button>
+                    </div>
+                </div>
+
+            {% else %}
+                <a class="delete_item" href="{% url 'accounts:create_address' %}">
+                    افزودن آدرس
+                    <i class="fas fa-plus text-danger"></i>
+                </a>
+                <br>
+                <br>
+                <br>
+            {% endif %}
+
+        </form>
+    </div>
+{% endblock main %}

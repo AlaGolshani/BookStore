@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block style %}
+    {% load static %}
+    <!-- Material Design Bootstrap -->
+    <link href="/static/css/mdb.min.css" rel="stylesheet">
+    <!-- Your custom styles (optional) -->
+    <link href="/static/css/style.min.css" rel="stylesheet">
+{% endblock %}
+
+{% block main %}
+    <section class="product spad">
+        <div class="container">
+
+            <!--Section: Products v.3-->
+            <section class="text-center mb-4">
+
+                <!--Grid row-->
+                <div class="row wow fadeIn">
+
+                    {% for book in books %}
+
+                        <!--Grid column-->
+                        <div class="col-lg-2 col-md-6 mb-4">
+
+                            <!--Card-->
+                            <div class="card">
+
+                                <!--Card image-->
+                                <div class="view overlay">
+                                    <img src="{{ book.imageURL }}"
+                                         class="card-img-top img-fluid img-thumbnail" alt=""
+                                         style="width: 10rem; height: 11rem">
+                                    <a href={% url 'book-detail' book.slug %}>
+                                        <div class="mask rgba-white-slight waves-effect waves-light"></div>
+                                    </a>
+                                </div>
+                                <!--Card image-->
+
+                                <!--Card content-->
+                                <div class="card-body text-center">
+                                    <!--Category & Title-->
+                                    <h6>
+                                        <strong>
+                                            <a href={% url 'book-detail' book.slug %} class="dark-grey-text">
+                                                {{ book.title }}
+                                            </a>
+                                        </strong>
+                                    </h6>
+                                    <h6 class="font-weight-bold blue-text">
+                                        <strong>{{ book.price }} تومان </strong>
+                                    </h6>
+
+                                </div>
+                                <!--Card content-->
+
+                            </div>
+                            <!--Card-->
+
+                        </div>
+                        <!--Grid column-->
+
+                    {% endfor %}
+                </div>
+                <!--Grid row-->
+
+            </section>
+            <!--Section: Products v.3-->
+
+        </div>
+    </section>
+{% endblock %}

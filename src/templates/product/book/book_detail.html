@@ -1,0 +1,166 @@
+{% extends 'base.html' %}
+
+{% block style %}
+    {% load static %}
+    <!-- Material Design Bootstrap -->
+    <link href="/static/css/mdb.min.css" rel="stylesheet" type="text/css">
+    <!-- Your custom styles (optional) -->
+    <link href="/static/css/style.min.css" rel="stylesheet" type="text/css">
+{% endblock %}
+
+{% block main %}
+    <div class="container dark-grey-text mt-5">
+
+        <!--Grid row-->
+        <div class="row wow fadeIn bg-lightblue-op" style="visibility: visible; animation-name: fadeIn;">
+
+            <!--Grid column-->
+            <div class="col-md-3 m-4">
+
+                <img src="{{ book.imageURL }}"
+                     class="img-fluid"
+                     alt=""
+                     style="width: 20rem; height: 20rem">
+            </div>
+            <!--Grid column-->
+
+            <!--Grid column-->
+            <div class="col-md-8 mb-4">
+
+                <!--Content-->
+                <div class="p-4">
+
+                    <div>
+                        {% if book.categories.all %}
+
+                            {% for category in book.categories.all %}
+                                <a href="#">
+                                    <span class="badge blue mr-1">{{ category }}</span>
+                                </a>
+                            {% endfor %}
+                        {% endif %}
+
+                        {% if book.cash_discount and book.cash_discount.is_valid %}
+                            <a href="#">
+                            <span class="badge green mr-1">
+                                {{ book.cash_discount.amount }} تومان تخفیف</span>
+                            </a>
+                        {% endif %}
+                        {% if book.percentage_discount and book.percentage_discount.is_valid %}
+                            <a href="#">
+                            <span class="badge green mr-1">
+                                {{ book.percentage_discount.percentage }} درصد تخفیف</span>
+                            </a>
+                        {% endif %}
+                        {% if book.quantity == 0 %}
+                            <a href="">
+                                <span class="badge red mr-1">موجود نیست</span>
+                            </a>
+                        {% endif %}
+                    </div>
+
+                    <br>
+
+                    <!--قیمت-->
+                    <p class="lead">
+                        {% if book.cash_discount or book.cash_discount %}
+                            <span class="mr-1"><del>{{ book.price }} تومان</del></span>
+                            <span class="text-primary">{{ book.get_price }} تومان</span>
+                        {% else %}
+                            <span class="text-primary">{{ book.price }} تومان</span>
+                        {% endif %}
+                    </p>
+
+                    <p class="lead font-weight-bold">خلاصه ای از کتاب:</p>
+
+                    <p>{{ book.summary }}</p>
+
+                    <p>نویسنده: {{ book.author }}</p>
+                    {% if not user.is_staff %}
+                        <button id="add-to-cart"
+                                class="btn btn-primary btn-md my-0 p waves-effect waves-light"
+                                data-url="{% url 'book-detail' book.slug %}"
+                                cart-url="{% url 'cart' %}">
+                            اضافه کردن به سبد خرید
+                            <i class="fas fa-shopping-cart ml-1 text-white"></i>
+                        </button>
+                    {% else %}
+                        <a class="btn btn-dark-green text-light" href="{% url 'edit_book' book.slug %}">ویرایش</a>
+                        <a id="delete_book_wait"
+                           href="{% url 'delete_book' book.slug %}"
+                           class="btn btn-danger text-light"
+                           data-url="{% url 'home' %}" delete-url="{% url 'delete_book' book.slug %}">
+                            حذف
+                        </a>
+                    {% endif %}
+
+                </div>
+                <!--Content-->
+
+            </div>
+            <!--Grid column-->
+
+        </div>
+        <!--Grid row-->
+
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script>
+        $(document).ready(function () {
+            const csrftoken = getCookie('csrftoken');
+
+            $('#add-to-cart').on('click', function () {
+                const ajax_url = $(this).attr('data-url');
+                const cart_url = $(this).attr('cart-url');
+                $.ajax(
+                    {
+                        type: "POST",
+                        url: ajax_url,
+                        headers: {'X-CSRFToken': csrftoken},
+                        success: function (data) {
+                            if (data.valid === false) {
+                                iziToast.show({
+                                    title: '',
+                                    color: 'red',
+                                    message: 'این کتاب در حال حاضر موجود نیست.'
+                                });
+                            } else {
+                                window.location.replace(cart_url);
+                            }
+                        }
+                    }
+                )
+            });
+
+
+            $('#delete_book').on('click', function () {
+                const home_url = $(this).attr('data-url')
+                const delete_url = $(this).attr('delete-url')
+                const sure = confirm('آیا از حذف این کتاب اطمینان دارید؟');
+                console.log('hello1')
+                if (sure === true) {
+                    console.log('hello2')
+                    $.ajax(
+                        {
+                            type: "POST",
+                            url: delete_url,
+                            headers: {'X-CSRFToken': csrftoken},
+                            success: function (data) {
+                                console.log('hello3')
+                                window.location.replace(home_url);
+                                {#iziToast.show({#}
+                                {#    title: '',#}
+                                {#    color: 'blue',#}
+                                {#    message: 'کتاب مورد نظر حذف شد.'#}
+                                {# });#}
+
+                            }
+                        }
+                    )
+                }
+            });
+        })
+    </script>
+{% endblock %}

@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}پنل ادمین{% endblock title %}
+
+{% block style %}
+    <link rel="stylesheet" href={% static 'css/report.css' %}>
+{% endblock %}
+
+{% block main %}
+
+    <div class="container text-white bg-light-op pt-3">
+        <div class="row">
+            <h3 class="col-3 pr-3">گزارش گیری</h3>
+            <h4 class="col-3 text-center p-2">تاریخ امروز: {{ today.year }}/{{ today.month }}/{{ today.day }}</h4>
+            <h4 class="col-3 text-center p-2">ساعت: {{ today.hour }}:{{ today.minute }}:{{ today.second }}</h4>
+            <h3 class="col-3 text-center p-2"></h3>
+        </div>
+        <div class="row justify-content-space-evenly">
+            <div class="col bg-info w-20 m-3 box-element box">
+                <h3 class="text-white">
+                    {{ customers_num }} - {{ staffs_num }} - {{ admins_num }}
+                </h3>
+                تعداد مشتریان | کارمندان | مدیران
+            </div>
+            <div class="col bg-success w-20 m-3 box-element box">
+                <h3 class="text-white">{{ orders_num }}</h3>
+                تعداد سفارشات
+            </div>
+            <div class="col w-20 m-3 bg-warning box-element">
+                <h3 class="text-white">{{ discounts_num }} - {{ no_discounts_num }}</h3>
+                تعداد محصولات تخفیف دار | بدون تخفیف
+            </div>
+            <div class="col bg-danger w-20 m-3 box-element box">
+                <h3 class="text-white">{{ income }} تومان</h3>
+                درآمد کل
+            </div>
+        </div>
+    </div>
+
+{% endblock main %}

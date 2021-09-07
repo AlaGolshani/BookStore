@@ -1,0 +1,21 @@
+{% extends "account/base.html" %}
+
+{% load i18n %}
+
+{% block head_title %}{% trans "Verify Your E-mail Address" %}{% endblock %}
+
+{% block content %}
+
+    <div class="container text-center w-50">
+        <h2 class=" container bg-lightblue-op text-center w-75 p-4 rounded-top mb-0">
+            تایید آدرس ایمیل
+        </h2>
+    </div>
+
+    <div class="container text-center w-50">
+        <div class="container w-75 text-end p-5 rounded-bottom bg-light-op">
+            <p>یک ایمیل تاییدیه بهت فرستادیم. لینک اش را برای کامل کردن فرایند ثبت‌نام دنبال کن.
+                اگر تا چند دقیقه‌ی دیگر دریافتش نکردی، لطفا با ما تماس بگیر.</p>
+        </div>
+    </div>
+{% endblock content %}

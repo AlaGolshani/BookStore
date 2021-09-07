@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block style %}
+    <link rel="stylesheet" href="../../../static/css/customer/order_history.css">
+{% endblock %}
+{% block title %}تاریخچه سفارشات{% endblock title %}
+{% block main %}
+    <div class="container w-75">
+        <table class="table bg-light">
+            <thead class="bg-lightblue-op">
+            <tr>
+                <th scope="col">قیمت کل</th>
+                <th scope="col">تاریخ ثبت سفارش</th>
+                <th scope="col">آدرس</th>
+                <th scope="col">وضعیت</th>
+            </tr>
+            </thead>
+            <tbody>
+
+            {% for order in orders.all %}
+                {% if order.status is not 'P' %}
+                <tr class="clickable-row tr-hover table-row" data-href="{% url 'previous_cart' order.pk%}">
+                    <td>{{ order.get_price }}</td>
+                    <td>{{ order.ordered|default:'ثبت نشده' }}</td>
+                    <td>{{ order.address|default:'-' }}</td>
+                    <td>{{ order.get_status_display }}</td>
+                </tr>
+                {% endif %}
+            {% empty %}
+                <tr>
+                    <td>هنوز سفارشی وجود ندارد.</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock main %}
+
+{% block script %}
+    <script>
+        $(document).ready(function ($) {
+            $(".table-row").click(function () {
+                window.document.location = $(this).data("href");
+            });
+        });
+    </script>
+{% endblock %}

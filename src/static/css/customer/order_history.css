@@ -1,0 +1,19 @@
+table {
+    border-collapse: collapse;
+    border-radius: 1em;
+    overflow: hidden;
+}
+
+th, td {
+    padding: 1em;
+    background: #ddd;
+    border-bottom: 2px solid white;
+}
+
+.table-row {
+    cursor: pointer;
+}
+
+.tr-hover:hover {
+    background-color: #e3e3e3 !important;
+}
