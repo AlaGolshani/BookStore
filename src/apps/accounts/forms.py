@@ -1,7 +1,6 @@
 from allauth.account.forms import SignupForm
 from django.forms import ModelForm, TextInput, Textarea
 from .models import Customer, Address, CustomUser
-from django import forms
 
 
 class MyCustomSignupForm(SignupForm):

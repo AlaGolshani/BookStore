@@ -1,4 +1,4 @@
-from django.forms import ModelForm
+from django.forms import ModelForm, TextInput
 from .models import Book, Category
 
 
@@ -25,3 +25,9 @@ class CategoryCreationForm(ModelForm):
         model = Category
         fields = ['name']
         exclude = ['creator']
+
+        widgets = {
+            'name': TextInput(attrs={'class': 'form-control w-75 m-1 m-auto',
+                                           'placeholder': 'نام دسته بندی ...'}),
+        }
+        labels = {'name': ''}  # removing the label

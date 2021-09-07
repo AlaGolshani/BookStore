@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load crispy_forms_tags %}
 {% block main %}
     <div class="container w-75">
         <h2 class="bg-lightblue m-auto w-75 p-4 text-center">کتاب جدید</h2>
@@ -7,10 +8,10 @@
                 <form method="post" accept-charset="utf-8"
                       enctype="multipart/form-data">
                     {% csrf_token %}
-                    {{ form.as_p }}
-                    <div class="row">
-                        <button class="col btn btn-success ml-2 m-auto" type="submit">ذخیره</button>
-                        <a class="col btn btn-primary text-white" href="{% url 'home' %}">
+                    {{ form|crispy }}
+                    <div class="row justify-content-between mt-4">
+                        <button class="col-2 btn btn-success" type="submit">ذخیره</button>
+                        <a class="col-2 btn btn-primary text-white" href="{% url 'home' %}">
                             بازگشت
                         </a>
                     </div>

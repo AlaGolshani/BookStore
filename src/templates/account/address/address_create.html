@@ -7,7 +7,7 @@
                 <form method="post">
                     {% csrf_token %}
                     {{ form.as_p }}
-                    <div class="row justify-content-space-between" style="justify-content: space-between;">
+                    <div class="row justify-content-between">
                         <button class="col-3 btn btn-success" type="submit">ذخیره</button>
                         <a class="col-3 btn btn-primary text-white" href="{% url 'accounts:edit' user.pk %}">
                             بازگشت
