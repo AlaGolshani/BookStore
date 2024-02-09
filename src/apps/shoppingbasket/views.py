@@ -20,8 +20,6 @@ class Cart(View):
             else:
                 customer = Customer.objects.create(device=device, username=device)
 
-        # customer = request.user
-
         # ایجاد سبد خرید در صورت لزوم
         basket, created = ShoppingBasket.objects.get_or_create(customer=customer)
 
@@ -35,7 +33,7 @@ class Cart(View):
 
     def post(self, request, *args, **kwargs):
         # اعمال کردن تخفیف روی سبد خرید
-        if request.is_ajax():
+        if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
             discount_code = request.POST['discount']
             qs = CodeDiscount.objects.filter(code__exact=discount_code)
 
@@ -99,25 +97,28 @@ class DeleteItemView(DeleteView):
     success_url = reverse_lazy('cart')
     template_name = 'shoppingbasket/cart.html'
 
-    def post(self, request, pk, *args, **kwargs):
-        if request.is_ajax():
-            order_item = OrderItem.objects.get(pk=pk)
+    def post(self, request, *args, **kwargs):
+        if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
+            order_item = OrderItem.objects.get(pk=kwargs['pk'])
             order_item.book.quantity += order_item.item_count
             order_item.book.save()
-            super().post(request, pk, *args, **kwargs)
+
+            the_order = order_item.order
+            order_item.delete()
+            # super(DeleteView).post(request, kwargs['pk'], *args, **kwargs)
             return JsonResponse(
                 {
-                    'order_original_price': order_item.order.get_original_price,
-                    'total_discount': order_item.order.get_total_discount,
-                    'order_price': order_item.order.get_price,
-                    'items_count': order_item.order.get_items_count,
+                    'order_original_price': the_order.get_original_price,
+                    'total_discount': the_order.get_total_discount,
+                    'order_price': the_order.get_price,
+                    'items_count': the_order.get_items_count,
                 }
             )
 
 
 class CounterInput(View):
     def post(self, request, pk, *args, **kwargs):
-        if request.is_ajax():
+        if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
             counter = request.POST['counter']
             order_item = OrderItem.objects.get(pk=pk)
             if counter == '+':

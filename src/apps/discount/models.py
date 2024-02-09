@@ -32,7 +32,7 @@ class CashDiscount(models.Model):
 
 
     @property
-    def is_valid(self):
+    def is_valid(self) -> bool:
         """
         بررسی تاریخ انقضای تخفیف
         """
@@ -65,7 +65,7 @@ class PercentageDiscount(models.Model):
     #     return jalali_converter(self.expired)
 
     @property
-    def is_valid(self):
+    def is_valid(self) -> bool:
         """
         بررسی تاریخ انقضای تخفیف
         """
@@ -99,7 +99,7 @@ class CodeDiscount(models.Model):
     #     return jalali_converter(self.expired)
 
     @property
-    def is_valid(self):
+    def is_valid(self) -> bool:
         """
         بررسی تاریخ انقضای تخفیف
         """

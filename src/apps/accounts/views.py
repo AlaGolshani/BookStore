@@ -135,7 +135,7 @@ class Report(SuperUserRequiredMixin, LoginRequiredMixin, View):
         today = jdatetime.datetime.today()
         context = {
             'customers_num': Customer.objects.filter(is_staff=False).count(),
-            'staffs_num': Customer.objects.filter(is_staff=True, is_superuser=True).count(),
+            'staffs_num': Customer.objects.filter(is_staff=True, is_superuser=False).count(),
             'admins_num': Admin.objects.filter(is_superuser=True).count(),
             'orders_num': Order.objects.filter(Q(status='S') | Q(status='D')).count(),
             'discounts_num': Book.objects.filter(Q(cash_discount__isnull=False) |

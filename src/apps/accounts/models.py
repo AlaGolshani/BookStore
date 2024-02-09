@@ -52,7 +52,7 @@ class Address(models.Model):
                                  verbose_name='مشتری')
 
     @staticmethod
-    def has_default(customer):
+    def has_default(customer) -> bool:
         for address in Address.objects.filter(customer=customer):
             if address.default is True:
                 return True

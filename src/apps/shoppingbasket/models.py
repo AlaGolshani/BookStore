@@ -53,14 +53,14 @@ class Order(models.Model):
     #     return jalali_converter(self.ordered)
 
     @property
-    def get_total_discount(self):
+    def get_total_discount(self) -> int:
         """
         مقدار کل تخفیف را برمی گرداند
         """
         return self.get_original_price - self.get_price
 
     @property
-    def get_original_price(self):
+    def get_original_price(self) -> int:
         """
         مبلغ کل سفارش بدون درنظر گرفتن تخفیف ها را برمی گرداند
         """
@@ -69,7 +69,7 @@ class Order(models.Model):
         return int(total)
 
     @property
-    def get_price(self):
+    def get_price(self) -> int:
         """
         مبلغ کل سفارش با درنظر گرفتن تخفیف ها را برمی گرداند
         """
@@ -92,7 +92,7 @@ class Order(models.Model):
         return int(total)
 
     @property
-    def get_items_count(self):
+    def get_items_count(self) -> int:
         """
         تعداد کل کالا ها را برمی گرداند
         """
@@ -111,18 +111,18 @@ class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE,
                               related_name='order_items',
                               verbose_name='سفارش')
-    book = models.ForeignKey(Book, on_delete=models.PROTECT, verbose_name='کتاب')
+    book = models.ForeignKey(Book, on_delete=models.CASCADE, verbose_name='کتاب')
     item_count = models.PositiveIntegerField('تعداد', default=0)
 
     @property
-    def get_original_price(self):
+    def get_original_price(self) -> int:
         """
         قیمت کل آیتم را بدون درنظر گرفتن تخفیف ها برمی گرداند
         """
         return self.book.price * self.item_count
 
     @property
-    def get_price(self):
+    def get_price(self) -> int:
         """
         قیمت کل آیتم را با درنظر گرفتن تخفیف ها برمی گرداند
         """

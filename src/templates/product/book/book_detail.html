@@ -63,7 +63,7 @@
 
                     <!--قیمت-->
                     <p class="lead">
-                        {% if book.cash_discount or book.cash_discount %}
+                        {% if book.cash_discount or book.percentage_discount %}
                             <span class="mr-1"><del>{{ book.price }} تومان</del></span>
                             <span class="text-primary">{{ book.get_price }} تومان</span>
                         {% else %}

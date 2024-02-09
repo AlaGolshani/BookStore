@@ -74,7 +74,7 @@ class Book(models.Model):
         return url
 
     @property
-    def get_price(self):
+    def get_price(self) -> int:
         """
         قیمت کتاب را با درنظر گرفتن تخفیف ها برمی گرداند
         """
